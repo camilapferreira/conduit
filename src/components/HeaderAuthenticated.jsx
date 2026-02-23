@@ -1,6 +1,6 @@
 import React from "react";
 
-const HeatherUnauthenticated = () => {
+const HeaderAuthenticated = () => {
   return (
     <nav className="navbar navbar-light">
       <div className="container">
@@ -14,13 +14,21 @@ const HeatherUnauthenticated = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/login">
-              Sign in
+            <a className="nav-link" href="/editor">
+              {" "}
+              <i className="ion-compose"></i>&nbsp;New Article{" "}
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/register">
-              Sign up
+            <a className="nav-link" href="/settings">
+              {" "}
+              <i className="ion-gear-a"></i>&nbsp;Settings{" "}
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="/profile/eric-simons">
+              <img src="" className="user-pic" />
+              Eric Simons
             </a>
           </li>
         </ul>
@@ -29,4 +37,4 @@ const HeatherUnauthenticated = () => {
   );
 };
 
-export { HeatherUnauthenticated };
+export { HeaderAuthenticated };

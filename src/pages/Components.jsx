@@ -1,15 +1,15 @@
 import React from "react";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
-import { HeatherUnauthenticated } from "../components/HeatherUnauthenticated";
-import { HeatherAuthenticated } from "../components/HeatherAuthenticated";
+import { HeaderUnauthenticated } from "../components/HeaderUnauthenticated";
+import { HeaderAuthenticated } from "../components/HeaderAuthenticated";
 
 const Components = () => {
   return (
     <>
       <Header />
-      <HeatherUnauthenticated />
-      <HeatherAuthenticated />
+      <HeaderUnauthenticated />
+      <HeaderAuthenticated />
       <Footer />
     </>
   );

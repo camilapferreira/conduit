@@ -1,7 +1,6 @@
-const HomeLayout = ({ Header, Footer, children }) => {
+const HomeLayout = ({ Footer, children }) => {
   return (
     <>
-      <Header />
       {children}
       <Footer />
     </>
