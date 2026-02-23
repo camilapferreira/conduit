@@ -1,0 +1,18 @@
+import React from "react";
+
+const Footer = () => {
+  return (
+    <footer>
+      <div className="container">
+        <a href="/" className="logo-font">
+          conduit
+        </a>
+        <span className="attribution">
+          An interactive learning project. Code &amp; design licensed under MIT.
+        </span>
+      </div>
+    </footer>
+  );
+};
+
+export { Footer };

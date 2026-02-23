@@ -1,0 +1,45 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-header {
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.app-header p {
+  color: var(--color-muted);
+  margin-bottom: 2rem;
+}
+
+.card {
+  padding: 2rem;
+}
+
+.card button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-accent);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card button:active {
+  transform: translateY(0);
+}
