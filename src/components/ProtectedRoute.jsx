@@ -1,19 +1,15 @@
 import { Outlet, Navigate } from "react-router-dom";
 import { HeaderAuthenticated } from "./HeaderAuthenticated";
 import { HeaderUnauthenticated } from "./HeaderUnauthenticated";
-
-// Single source for token (replace with useContext(AuthContext) when you add it)
-const getToken = () => {
-  // e.g. return localStorage.getItem("token");
-  return false;
-};
+import { AuthContext } from "./AuthProvider";
+import { useContext } from "react";
 
 /** Renders the correct header by token, then the current route (Outlet) */
 export const AuthLayout = () => {
-  const token = getToken();
+  const { auth } = useContext(AuthContext);
   return (
     <>
-      {token ? <HeaderAuthenticated /> : <HeaderUnauthenticated />}
+      {auth ? <HeaderAuthenticated /> : <HeaderUnauthenticated />}
       <Outlet />
     </>
   );

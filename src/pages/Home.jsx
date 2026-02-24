@@ -2,8 +2,11 @@ import React from "react";
 import { HomeLayout } from "../components/HomeLayout";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { AuthContext } from "../components/AuthProvider";
+import { useContext } from "react";
 
 export const Home = () => {
+  const { auth } = useContext(AuthContext);
   return (
     <HomeLayout Header={Header} Footer={Footer}>
       <div className="home-page">
@@ -19,11 +22,13 @@ export const Home = () => {
             <div className="col-md-9">
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
-                  <li className="nav-item">
-                    <a className="nav-link" href="">
-                      Your Feed
-                    </a>
-                  </li>
+                  {auth && (
+                    <li className="nav-item">
+                      <a className="nav-link" href="">
+                        Your Feed
+                      </a>
+                    </li>
+                  )}
                   <li className="nav-item">
                     <a className="nav-link active" href="">
                       Global Feed
