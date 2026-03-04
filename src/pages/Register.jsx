@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const createUser = async ({ username, email, password }) => {
+  const response = await axios.post("http://localhost:3000/api/users", {
+    username,
+    email,
+    password,
+  });
+  return response.data;
+};
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
-  const [data, setData] = useState("");
+  const navigate = useNavigate();
 
   return (
     <div className="auth-page">
@@ -18,11 +29,16 @@ const Register = () => {
             <ul className="error-messages">
               <li>That email is already taken</li>
             </ul>
-            <pre>{data}</pre>
+
             <form
-              onSubmit={handleSubmit((data) =>
-                setData(JSON.stringify(data, null, 2)),
-              )}
+              onSubmit={handleSubmit(async (data) => {
+                try {
+                  await createUser(data);
+                  navigate("/");
+                } catch (error) {
+                  console.error(error);
+                }
+              })}
             >
               <fieldset className="form-group">
                 <input
