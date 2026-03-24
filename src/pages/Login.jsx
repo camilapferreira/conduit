@@ -36,7 +36,8 @@ const Login = () => {
                   const response = await login(data);
                   setToken(response.user.token);
 
-                  navigate("/");
+                  // navigate("/", { replace: true });
+                  window.location.href = "/";
                 } catch (error) {
                   console.error(error);
                 }
