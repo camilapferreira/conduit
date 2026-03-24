@@ -1,6 +1,21 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { setToken } from "../components/AuthProvider";
+
+const login = async ({ email, password }) => {
+  const response = await axios.post("http://localhost:3000/api/users/login", {
+    email,
+    password,
+  });
+  return response.data;
+};
 
 const Login = () => {
+  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+
   return (
     <div className="auth-page">
       <div className="container page">
@@ -15,9 +30,21 @@ const Login = () => {
               <li>That email is already taken</li>
             </ul>
 
-            <form>
+            <form
+              onSubmit={handleSubmit(async (data) => {
+                try {
+                  const response = await login(data);
+                  setToken(response.user.token);
+
+                  navigate("/");
+                } catch (error) {
+                  console.error(error);
+                }
+              })}
+            >
               <fieldset className="form-group">
                 <input
+                  {...register("email")}
                   className="form-control form-control-lg"
                   type="text"
                   placeholder="Email"
@@ -25,6 +52,7 @@ const Login = () => {
               </fieldset>
               <fieldset className="form-group">
                 <input
+                  {...register("password")}
                   className="form-control form-control-lg"
                   type="password"
                   placeholder="Password"
