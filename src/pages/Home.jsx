@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { HomeLayout } from "../components/HomeLayout";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { AuthContext } from "../components/AuthProvider";
-import { useContext } from "react";
+import axios from "axios";
+
+const getArticles = async () => {
+  const response = await axios.get("http://localhost:3000/api/articles");
+  return response.data;
+};
 
 export const Home = () => {
   const { auth } = useContext(AuthContext);
+
+  useEffect(() => {
+    getArticles().then((articles) => {
+      console.log(articles);
+    });
+  }, []);
+
   return (
     <HomeLayout Header={Header} Footer={Footer}>
       <div className="home-page">

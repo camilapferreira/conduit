@@ -10,6 +10,39 @@ await fastify.register(cors, {
   origin: true, // allows your React app (e.g. http://localhost:5173)
 });
 
+fastify.get("/api/articles", async (request, reply) => {
+  return reply.send([
+    {
+      title: "Hello World",
+      slug: "hello-world",
+      description: "This is a test article",
+      body: "This is a test article body",
+      tagList: ["test", "article"],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      favorited: false,
+      favoritesCount: 0,
+      author: {
+        username: "test",
+      },
+    },
+    {
+      title: "Hello World 2",
+      slug: "hello-world-2",
+      description: "This is a test article 2",
+      body: "This is a test article body 2",
+      tagList: ["test", "article"],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      favorited: false,
+      favoritesCount: 0,
+      author: {
+        username: "test",
+      },
+    },
+  ]);
+});
+
 // ----- Register -----
 fastify.post("/api/users", async (request, reply) => {
   const { username, email, password } = request.body || {};
