@@ -106,6 +106,8 @@
 | E4-S2 | Profile route | `/profile/:username` resolves param and shows placeholder or real data. |
 | E4-S3 | Settings route | `/settings` reachable when authenticated. |
 
+**Task breakdown** (implementation tasks, Done/Partial/Not started, and epics **E5–E9** for gaps toward full Conduit parity): see [`conduit-epics-stories-tasks.md`](./conduit-epics-stories-tasks.md).
+
 ---
 
 ## 6. Non-functional requirements
