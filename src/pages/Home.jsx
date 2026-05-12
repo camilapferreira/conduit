@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { HomeLayout } from "../components/HomeLayout";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -7,16 +7,27 @@ import axios from "axios";
 
 const getArticles = async () => {
   const response = await axios.get("http://localhost:3000/api/articles");
-  return response.data;
+  return response.data.articles;
 };
 
 export const Home = () => {
   const { auth } = useContext(AuthContext);
 
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    getArticles().then((articles) => {
-      console.log(articles);
-    });
+    getArticles()
+      .then((articles) => {
+        setArticles(articles);
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -49,71 +60,42 @@ export const Home = () => {
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/profile/eric-simons">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/profile/eric-simons" className="author">
-                      Eric Simons
+              {articles.map((article) => (
+                <div className="article-preview" key={article.slug}>
+                  <div className="article-meta">
+                    <a href={`/profile/${article.author.username}`}>
+                      <img src={article.image} alt={article.author.username} />
                     </a>
-                    <span className="date">January 20th</span>
+                    <div className="info">
+                      <a
+                        href={`/profile/${article.author.username}`}
+                        className="author"
+                      >
+                        {article.author.username}
+                      </a>
+                      <span className="date">{article.createdAt}</span>
+                    </div>
+                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                      <i className="ion-heart"></i> {article.favoritesCount}
+                    </button>
                   </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 29
-                  </button>
-                </div>
-                <a
-                  href="/article/how-to-build-webapps-that-scale"
-                  className="preview-link"
-                >
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                  <ul className="tag-list">
-                    <li className="tag-default tag-pill tag-outline">
-                      realworld
-                    </li>
-                    <li className="tag-default tag-pill tag-outline">
-                      implementations
-                    </li>
-                  </ul>
-                </a>
-              </div>
-
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="/profile/albert-pai">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
+                  <a href={`/article/${article.slug}`} className="preview-link">
+                    <h1> {article.title} </h1>
+                    <p> {article.description} </p>
+                    <span> {article.body} </span>
+                    <ul className="tag-list">
+                      {article.tagList.map((tag) => (
+                        <li
+                          className="tag-default tag-pill tag-outline"
+                          key={tag}
+                        >
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
                   </a>
-                  <div className="info">
-                    <a href="/profile/albert-pai" className="author">
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 32
-                  </button>
                 </div>
-                <a href="/article/the-song-you" className="preview-link">
-                  <h1>
-                    The song you won't ever stop singing. No matter how hard you
-                    try.
-                  </h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                  <ul className="tag-list">
-                    <li className="tag-default tag-pill tag-outline">
-                      realworld
-                    </li>
-                    <li className="tag-default tag-pill tag-outline">
-                      implementations
-                    </li>
-                  </ul>
-                </a>
-              </div>
+              ))}
 
               <ul className="pagination">
                 <li className="page-item active">
