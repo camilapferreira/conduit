@@ -6,45 +6,104 @@ import { createToken } from "./token.js";
 
 const fastify = Fastify({ logger: true });
 
+const slugify = (title) =>
+  title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
 await fastify.register(cors, {
   origin: true, // allows your React app (e.g. http://localhost:5173)
 });
 
-fastify.get("/api/articles", async (request, reply) => {
-  return reply.send({
-    articles: [
-      {
-        title: "Hello World",
-        slug: "hello-world",
-        description: "This is a test article",
-        body: "This is a test article body",
-        tagList: ["test", "article"],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        favorited: false,
-        favoritesCount: 0,
-        image: "http://i.imgur.com/Qr71crq.jpg",
-        author: {
-          username: "test",
-        },
-      },
-      {
-        title: "Hello World 2",
-        slug: "hello-world-2",
-        description: "This is a test article 2",
-        body: "This is a test article body 2",
-        tagList: ["test", "article"],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        favorited: false,
-        favoritesCount: 0,
-        image: "http://i.imgur.com/N4VcUeJ.jpg",
-        author: {
-          username: "test",
-        },
-      },
-    ],
+fastify.post("/api/articles", async (request, reply) => {
+  const { title, description, body, tagList } = request.body || {};
+  const slug = slugify(title);
+  const authorId = "7";
+  const createdAt = new Date().toISOString();
+  const updatedAt = new Date().toISOString();
+  const tagListString = tagList ? JSON.stringify(tagList) : null;
+
+  try {
+    const stmt = db.prepare(
+      "INSERT INTO articles (slug, title, description, body, tag_list, author_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    );
+    stmt.run(
+      slug,
+      title,
+      description,
+      body,
+      tagListString,
+      authorId,
+      createdAt,
+      updatedAt,
+    );
+  } catch (err) {
+    throw err;
+  }
+  return reply.code(201).send({
+    article: {
+      slug,
+      title,
+      description,
+      body,
+      tagListString,
+      authorId,
+      createdAt,
+      updatedAt,
+    },
   });
+});
+
+fastify.get("/api/articles", async (request, reply) => {
+  const articles = db.prepare("SELECT * FROM articles").all();
+  const convertedArticles = articles.map((article) => {
+    const author = db
+      .prepare("SELECT username FROM users WHERE id = ?")
+      .get(article.author_id);
+    return {
+      ...article,
+      tagList: article.tag_list ? JSON.parse(article.tag_list) : [],
+      author: author,
+    };
+  });
+
+  return reply.send({ articles: convertedArticles });
+  // return reply.send({
+  //   articles: [
+  //     {
+  //       title: "Hello World",
+  //       slug: "hello-world",
+  //       description: "This is a test article",
+  //       body: "This is a test article body",
+  //       tagList: ["test", "article"],
+  //       createdAt: new Date(),
+  //       updatedAt: new Date(),
+  //       favorited: false,
+  //       favoritesCount: 0,
+  //       image: "http://i.imgur.com/Qr71crq.jpg",
+  //       author: {
+  //         username: "test",
+  //       },
+  //     },
+  //     {
+  //       title: "Hello World 2",
+  //       slug: "hello-world-2",
+  //       description: "This is a test article 2",
+  //       body: "This is a test article body 2",
+  //       tagList: ["test", "article"],
+  //       createdAt: new Date(),
+  //       updatedAt: new Date(),
+  //       favorited: false,
+  //       favoritesCount: 0,
+  //       image: "http://i.imgur.com/N4VcUeJ.jpg",
+  //       author: {
+  //         username: "test",
+  //       },
+  //     },
+  //   ],
+  // });
 });
 
 // ----- Register -----
@@ -86,6 +145,11 @@ fastify.post("/api/users", async (request, reply) => {
       token,
     },
   });
+});
+
+fastify.get("/api/users", async (request, reply) => {
+  const users = db.prepare("SELECT id, username, email FROM users").all();
+  return reply.send({ users });
 });
 
 // ----- Login -----
